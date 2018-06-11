@@ -22,7 +22,7 @@ client.on("login", function(status, rawdata) {
     if (status) {
 
         console.log("LOGIN/PASS success");
-        client.list(1);
+        client.stat();
 
     } else {
 
@@ -31,3 +31,42 @@ client.on("login", function(status, rawdata) {
 
     }
 });
+
+client.on("list", function(status, msgcount, msgnumber, data, rawdata) {
+
+    if (status === false) {
+
+        console.log("LIST failed");
+        client.quit();
+
+    } else {
+
+        console.log("LIST success with " + msgcount + " element(s)");
+
+        if (msgcount > 0)
+            client.retr(1);
+        else
+            client.quit();
+
+    }
+});
+
+client.on("retr", function(status, msgnumber, data, rawdata) {
+
+    if (status === true) {
+
+        console.log("RETR success for msgnumber " + msgnumber);
+        // client.dele(msgnumber);
+        client.quit();
+
+    } else {
+
+        console.log("RETR failed for msgnumber " + msgnumber);
+        client.quit();
+
+    }
+});
+
+client.on('stat', (resp, returnValue, data) => {
+    console.log(resp, returnValue, data);
+})
